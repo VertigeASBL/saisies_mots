@@ -1,0 +1,22 @@
+<paquet
+  prefix="saisies_mots"
+  categorie="outil"
+  version="0.0.1"
+  etat="dev"
+  compatibilite="[3.0.17;3.0.*]"
+  logo=""
+  documentation=""
+>
+  <!--
+    Paquet genere le 2015-01-15 15:07:02
+  -->
+
+  <nom>Saisies pour Mots-Clés</nom>
+
+  <auteur lien='http://vertige.org'>Michel @ Vertige ASBL</auteur>
+
+  <licence>GNU/GPL</licence>
+
+  <necessite nom="saisies" />
+
+</paquet>

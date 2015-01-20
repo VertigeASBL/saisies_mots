@@ -1,0 +1,20 @@
+[(#REM)
+
+  Une saisie pour sélectionner un ou plusieurs mots-clés parmi ceux existants.
+
+  Cette saisie admet les mêmes paramètres que la saisie checkbox, avec
+  un paramètre supplémentaire : "id_groupe" qui permet de restreindre
+  les choix proposés aux mot-clés d'un groupe. Le paramètre "datas"
+  sera ignoré, il n'y a qu'à utiliser la saisie checkbox si on veut
+  choisir les datas…
+
+]
+
+#SET{mots-cles, #ARRAY}
+<BOUCLE_mots(MOTS) {id_groupe?}>
+  [(#SET{mots-cles, #GET{mots-cles}|array_merge{#ARRAY{#TITRE, #ID_MOT}}})]
+</BOUCLE_mots>
+
+[(#SET{mots-cles, #GET{mots-cles}|array_flip})]
+
+[(#INCLURE{fond=saisies/checkbox, env, datas=#GET{mots-cles}})]
