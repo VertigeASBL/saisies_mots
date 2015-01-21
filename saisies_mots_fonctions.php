@@ -28,9 +28,13 @@ function trouver_mots ($objet, $id_objet, $id_groupe='*') {
     $mots_lies = objet_trouver_liens(array('mot' => mots_groupe($id_groupe)),
                                      array($objet => $id_objet));
 
-    return array_map(function ($el) {
-        return $el['id_mot'];
-    }, $mots_lies);
+    if ($mots_lies) {
+        return array_map(function ($el) {
+            return $el['id_mot'];
+        }, $mots_lies);
+    } else {
+        return array();
+    }
 }
 
 /**
@@ -53,6 +57,7 @@ function lier_mots ($objet, $id_objet, $mots, $id_groupe='*') {
 
     include_spip('action/editer_liens');
 
+    if ( ! $mots) { $mots = array(); }
     // On vire d'éventuels identifiants non valides
     $mots = array_filter($mots, function ($el) {
         return (intval($el) > 0);
