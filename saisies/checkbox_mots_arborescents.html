@@ -36,16 +36,28 @@
   </div>
 ]
 
-<BOUCLE_checkbox(DATA){source sql, (#ID_GROUPE|requete_mots_arborescents|monoligne)}>
+<BOUCLE_checkbox(DATA){source sql, (#ID_GROUPE|requete_mots_arborescents)}>
   [(#SET{type, #VALEUR|table_valeur{mot}})]
-  [(#SET{id_mot, #VALEUR|table_valeur{id_mot}})]
+  [(#SET{id_objet, #VALEUR|table_valeur{id_objet}})]
   [(#SET{titre, #VALEUR|table_valeur{titre}})]
 
-  <pre>#GET{type} #GET{id_mot} #GET{titre}</pre>
+  [(#GET{type}|=={mot}|oui)
+    #SET{nom, #GET{id_objet}}
+  ]
+  [(#GET{type}|=={groupe_mots}|oui)
+    #SET{nom, groupe_#GET{id_objet}}
+  ]
 
-  <div class="#ENV{choix,choix}[ (#ENV{choix,choix})_#ID_MOT]">[(#SET{id,champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#ID_MOT}|md5)]})]
-  <input type="checkbox" name="#ENV{nom}[]" class="checkbox" id="#GET{id}"[ (#ID_MOT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"] value="#ID_MOT"[(#ID_MOT|in_array{#GET{disabled}}|oui) disabled="disabled"][ (#ENV*{attributs})] />
-  <label for="#GET{id}"[(#ID_MOT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)class="on"]>#TITRE</label>
+  <div class="#ENV{choix,choix}[ (#ENV{choix,choix})_#GET{nom}]">[(#SET{id,champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#GET{nom}}|md5)]})]
+  <input type="checkbox" name="#ENV{nom}[]" class="checkbox" id="#GET{id}"[ (#GET{nom}|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"] value="#GET{nom}"[(#GET{nom}|in_array{#GET{disabled}}|oui) disabled="disabled"][ (#ENV*{attributs})] />
+  <label for="#GET{id}"[(#GET{nom}|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)class="on"]>#GET{titre}</label>
+
+  [(#GET{type}|=={groupe_mots}|oui)
+    <fieldset>
+      #INCLURE{fond=saisies/checkbox_mots_arborescents, env, id_groupe=#GET{id_objet}}
+    </fieldset>
+  ]
+
 </div>
 </BOUCLE_checkbox>
 [(#ENV{choix_alternatif}|oui)
@@ -59,5 +71,4 @@
     </p>]
 </div>
 ]
-
 </B_checkbox>

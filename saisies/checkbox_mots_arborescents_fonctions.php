@@ -3,15 +3,15 @@
 function requete_mots_arborescents ($id_groupe) {
 
     $requete = sql_multiselect(array(
-        "SELECT ('mot'), id_mot, titre
+        "SELECT ('mot'), id_mot as id_objet, titre
            FROM spip_mots
            WHERE id_groupe=" . intval($id_groupe),
-        "SELECT ('groupe_mots'), id_groupe, titre
+        "SELECT ('groupe_mots'), id_groupe as id_objet, titre
            FROM spip_groupes_mots
            WHERE id_parent=" . intval($id_groupe),
-    ), 'titre');
+    ), 'titre, mot DESC');
 
-    return $requete;
+    return monoligne($requete);
 }
 
 /* force un string à être sur une seule ligne, et vire d'éventuelles
