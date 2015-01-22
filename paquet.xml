@@ -1,7 +1,7 @@
 <paquet
   prefix="saisies_mots"
   categorie="outil"
-  version="0.0.3"
+  version="0.0.4"
   etat="dev"
   compatibilite="[3.0.17;3.0.*]"
   logo=""
@@ -21,4 +21,6 @@
   <utilise nom="gma" />
 
   <pipeline nom="header_prive" inclure="saisies_mots_pipelines.php" />
+  <pipeline nom="jquery_plugins" inclure="saisies_mots_pipelines.php" />
+
 </paquet>

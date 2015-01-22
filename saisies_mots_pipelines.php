@@ -25,3 +25,17 @@ function saisies_mots_header_prive ($flux) {
 
     return $flux;
 }
+
+/**
+ * Insére le javascript qui gère les saisies mots-clés
+ *
+ * @pipeline jquery_plugins
+ * @param  array $scripts Données du pipeline
+ * @return array       Données du pipeline
+ */
+function saisies_mots_jquery_plugins ($scripts) {
+
+    $scripts[] = 'javascript/jquery.saisiesMotsCles.js';
+
+    return $scripts;
+}
