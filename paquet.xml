@@ -1,7 +1,7 @@
 <paquet
   prefix="saisies_mots"
   categorie="outil"
-  version="0.0.2"
+  version="0.0.3"
   etat="dev"
   compatibilite="[3.0.17;3.0.*]"
   logo=""
@@ -20,4 +20,5 @@
   <necessite nom="saisies" />
   <utilise nom="gma" />
 
+  <pipeline nom="header_prive" inclure="saisies_mots_pipelines.php" />
 </paquet>
