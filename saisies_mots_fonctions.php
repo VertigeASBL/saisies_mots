@@ -18,14 +18,17 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * @param int     $id_objet :  L'id de l'objet
  * @param int     $id_groupe : Un éventuel groupe de mots-clés auquel se
  *                             restreindre.
+ * @param bool    $chercher_enfants : Si TRUE, inclure les éventuels
+ *                            sous-groupes de mots-clés (ça n'a de
+ *                            sens que si l'on utilise le plugin gma)
  *
  * @return array : Une liste des id_mot des mots-clés liés à l'objet
  */
-function trouver_mots ($objet, $id_objet, $id_groupe='*') {
+function trouver_mots ($objet, $id_objet, $id_groupe='*', $chercher_enfants=FALSE) {
 
     include_spip('action/editer_liens');
 
-    $mots_lies = objet_trouver_liens(array('mot' => mots_groupe($id_groupe)),
+    $mots_lies = objet_trouver_liens(array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
                                      array($objet => $id_objet));
 
     if ($mots_lies) {
@@ -50,10 +53,13 @@ function trouver_mots ($objet, $id_objet, $id_groupe='*') {
  * @param array $mots :       une liste d'identifiant de mots-clés à
  *                            associer à l'objet
  * @param int    $id_groupe : un éventuel id_groupe auquel se restreindre.
+ * @param bool $chercher_enfants : Si TRUE, inclure les éventuels sous-groupes
+ *                            de mots-clés (ça n'a de sens que si l'on
+ *                            utilise le plugin gma)
  *
  * @return String  Un message d'erreur si une erreur a eu lieu, rien sinon.
  */
-function lier_mots ($objet, $id_objet, $mots, $id_groupe='*') {
+function lier_mots ($objet, $id_objet, $mots, $id_groupe='*', $chercher_enfants=FALSE) {
 
     include_spip('action/editer_liens');
 
@@ -63,7 +69,9 @@ function lier_mots ($objet, $id_objet, $mots, $id_groupe='*') {
         return (intval($el) > 0);
     });
 
-    objet_dissocier(array('mot' => mots_groupe($id_groupe)), array($objet => $id_objet));
+    objet_dissocier(array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
+                    array($objet => $id_objet));
+
     objet_associer(array('mot' => $mots), array($objet => $id_objet));
 }
 
@@ -71,10 +79,13 @@ function lier_mots ($objet, $id_objet, $mots, $id_groupe='*') {
  * Retourne les mots-clé appartenant à un groupe de mots-clés
  *
  * @param int $id_groupe : l'identifiant d'un groupe de mots-clé
+ * @param bool $chercher_enfants : Si TRUE, inclure les éventuels
+ *                         sous-groupes de mots-clés (ça n'a de sens
+ *                         que si l'on utilise le plugin gma)
  *
  * @return array : Une liste des identifiants des mots-clés du groupe
  */
-function mots_groupe ($id_groupe='*') {
+function mots_groupe ($id_groupe='*', $chercher_enfants=FALSE) {
 
     if ($id_groupe === '*') {
         $mots_groupe = sql_allfetsel('id_mot', 'spip_mots');
@@ -86,6 +97,15 @@ function mots_groupe ($id_groupe='*') {
     $mots_groupe = array_map(function ($el) {
         return $el['id_mot'];
     }, $mots_groupe);
+
+    if ($chercher_enfants) {
+        $sous_groupes = sql_allfetsel('id_groupe', 'spip_groupes_mots',
+                                      'id_parent=' . intval($id_groupe));
+
+        foreach ($sous_groupes as $sous_groupe) {
+            $mots_groupe = array_merge($mots_groupe, mots_groupe($sous_groupe['id_groupe'], TRUE));
+        }
+    }
 
     return $mots_groupe;
 }
