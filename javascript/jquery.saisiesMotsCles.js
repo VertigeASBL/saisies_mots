@@ -14,7 +14,9 @@
                 contenu  = fieldset.children('.contenu');
 
             if (config.demarrer_plie) {
-                contenu.hide();
+                if (contenu.find('input[checked="checked"]').length === 0) {
+                    contenu.hide();
+                }
             }
 
             // un clic sur la légende plie ou déplie le fieldset
