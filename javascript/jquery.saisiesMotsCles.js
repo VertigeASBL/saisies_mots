@@ -54,6 +54,8 @@
                             $('.choix_groupe_' + groupe.id + ' input')
                                 .attr('checked','checked')
                                 .trigger('change');
+                            $('.choix_groupe_' + groupe.id + ' .contenu')
+                                .show(200);
                         } else {
                             $('.choix_groupe_' + groupe.id + ' input')
                                 .attr('checked', false)
