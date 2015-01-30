@@ -109,3 +109,28 @@ function mots_groupe ($id_groupe='*', $chercher_enfants=FALSE) {
 
     return $mots_groupe;
 }
+
+/**
+ * Critère de boucle pour filtrer par mot-clés
+ *
+ * On passe soit un tableau d'id_mot en paramètre, mais contrairement
+ * à ce qui se passe en faisant {id_mot IN #GET{mes_id_mots}}, passer
+ * un tableau vide ne filtre rien.
+ */
+function critere_mots_in_ou_tout ($idb, &$boucles, $crit) {
+
+    $boucle = $boucles[$idb];
+    $id_mots = calculer_liste(array($crit->param[0][0]), array(), $boucles, $boucle->id_parent);
+
+    $trouver_table = charger_fonction('trouver_table', 'base');
+
+    $depart = array($boucle->id_table,
+                    $trouver_table($boucle->id_table, $boucle->sql_serveur));
+
+    $arrivee = array('mots',
+                     $trouver_table('mots', $boucle->sql_serveur));
+
+    $alias_jointure = calculer_jointure($boucle, $depart, $arrivee);
+
+    $boucle->where[] = "((count($id_mots) > 0) ? sql_in('$alias_jointure.id_mot', $id_mots) : '')";
+}
