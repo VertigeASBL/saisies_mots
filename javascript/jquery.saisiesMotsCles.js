@@ -16,6 +16,7 @@
             if (config.demarrer_plie) {
                 if (contenu.find('input[checked="checked"]').length === 0) {
                     contenu.hide();
+                    legend.addClass('plie');
                 }
             }
 
@@ -24,6 +25,7 @@
                 contenu.toggle({
                     duration: 200
                 });
+                legend.toggleClass('plie');
             });
         });
 
