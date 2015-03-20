@@ -45,8 +45,30 @@
         // correspondant.
         saisie.find('.choix_mot').each(function () {
             var choix_mot = $(this),
-                titre = choix_mot.find('label').html().trim();
+                titre = choix_mot.find('label').html().trim(),
+                groupe_parent = choix_mot.parents('.choix_groupe_mots').first();
 
+            // les mots-clés dont le titre commence par "tous" ou
+            // "toutes" modifient leur groupe en entier
+            if (titre.match(/^tou(s|tes)/i)) {
+                choix_mot.change(function (e) {
+                    if (e.target.checked) {
+                        groupe_parent.find('input').not(choix_mot.find('input'))
+                            .attr('checked','checked')
+                            .trigger('change');
+                        groupe_parent.find('.contenu')
+                            .show(200);
+                    } else {
+                        groupe_parent.find('input').not(choix_mot.find('input'))
+                            .attr('checked', false)
+                            .trigger('change');
+                    }
+                });
+            }
+
+            // TODO : ceci devrait être corrigé pour ne s'appliquer
+            // qu'aux groupes de mots au même niveau que le mot en
+            // question
             $.each(groupes, function (i,groupe) {
 
                 if (titre === groupe.titre) {
