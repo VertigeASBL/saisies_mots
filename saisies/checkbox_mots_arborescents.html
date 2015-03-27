@@ -57,7 +57,7 @@
            value="#GET{nom}"[(#GET{nom}|in_array{#GET{disabled}}|oui) disabled="disabled"]
            [ (#ENV*{attributs})] />
     <label for="#GET{id}"[(#GET{nom}|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)class="on"]>
-      #GET{titre}
+      [(#GET{titre}|supprimer_numero)]
     </label>
   ]
 
