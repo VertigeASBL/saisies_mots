@@ -50,7 +50,7 @@
 
             // les mots-clés dont le titre commence par "tous" ou
             // "toutes" modifient leur groupe en entier
-            if (titre.match(/^tou(s|tes)/i)) {
+            if (titre.match(/^tou(s|tes?)/i)) {
                 choix_mot.change(function (e) {
                     if (e.target.checked) {
                         groupe_parent.find('input').not(choix_mot.find('input'))
