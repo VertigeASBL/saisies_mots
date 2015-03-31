@@ -2,7 +2,7 @@
     // définition du plugin jquery
     $.fn.saisiesMotsCles = function (options) {
 
-        var config, saisie = $(this), groupes;
+        var config, saisie = $(this);
 
         config = $.extend(true, {
             demarrer_plie: true
@@ -29,16 +29,6 @@
             });
         });
 
-        // On calcule une fois pour toutes une liste des groupes de
-        // mots-clés
-        groupes = saisie.find('.choix_groupe_mots');
-        groupes = $.map(groupes, function (el) {
-            return {
-                'id': el.className.replace(/^.*choix_groupe_([^ ]+).*$/,'$1'),
-                'titre': $(el).find('legend').html().trim()
-            };
-        });
-
         // les mot-clés qui ont le même titre qu'un groupe sont
         // spéciaux, quand on les active/désactive, on
         // active/désactive automatiquement les mots-clés du groupe
@@ -46,7 +36,8 @@
         saisie.find('.choix_mot').each(function () {
             var choix_mot = $(this),
                 titre = choix_mot.find('label').html().trim(),
-                groupe_parent = choix_mot.parents('.choix_groupe_mots').first();
+                groupe_parent = $(e.target).parents('.choix_groupe_mots').first();
+                groupes_fratrie = groupe_parent.find('.choix_groupe_mots');
 
             // les mots-clés dont le titre commence par "tous" ou
             // "toutes" modifient leur groupe en entier
@@ -66,10 +57,15 @@
                 });
             }
 
-            // TODO : ceci devrait être corrigé pour ne s'appliquer
-            // qu'aux groupes de mots au même niveau que le mot en
-            // question
-            $.each(groupes, function (i,groupe) {
+            // On calcule les groupes de mots-clés du même niveau et en dessous
+            groupes_fratrie = $.map(groupes_fratrie, function (el) {
+                return {
+                    'id': el.className.replace(/^.*choix_groupe_([^ ]+).*$/,'$1'),
+                    'titre': $(el).find('legend').html().trim()
+                };
+            });
+
+            $.each(groupes_fratrie, function (i,groupe) {
 
                 if (titre === groupe.titre) {
 
