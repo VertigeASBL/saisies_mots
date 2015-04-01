@@ -36,7 +36,7 @@
         saisie.find('.choix_mot').each(function () {
             var choix_mot = $(this),
                 titre = choix_mot.find('label').html().trim(),
-                groupe_parent = $(e.target).parents('.choix_groupe_mots').first();
+                groupe_parent = choix_mot.parents('.choix_groupe_mots').first();
                 groupes_fratrie = groupe_parent.find('.choix_groupe_mots');
 
             // les mots-clés dont le titre commence par "tous" ou
