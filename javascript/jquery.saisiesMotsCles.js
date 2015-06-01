@@ -40,7 +40,7 @@
                 groupes_fratrie = groupe_parent.find('.choix_groupe_mots');
 
             // les mots-clés dont le titre commence par "tous" ou
-            // "toutes" modifient leur groupe en entier
+            // "toutes" modifient leur groupe en entier…
             if (titre.match(/^tou(s|tes?)/i)) {
                 choix_mot.change(function (e) {
                     if (e.target.checked) {
@@ -53,6 +53,20 @@
                         groupe_parent.find('input').not(choix_mot.find('input'))
                             .attr('checked', false)
                             .trigger('change');
+                    }
+                });
+            // …alors que les autres décochent une éventuelle case
+            // "tous" quand on les décoche
+            } else {
+                choix_mot.change(function (e) {
+                    if ( ! e.target.checked) {
+                        groupe_parent
+                            .find('> fieldset > .contenu > .choix')
+                            .each(function () {
+                                if ($(this).find('label').html().trim().match(/^tou(s|tes?)/i)) {
+                                    $(this).find('input').first().attr('checked', false);
+                                }
+                            });
                     }
                 });
             }
