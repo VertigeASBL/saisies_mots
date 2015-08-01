@@ -126,6 +126,25 @@
        assert.checked( '.-g1-g1-m3', "Les sous-mots sont cochés" );
      });
 
+     QUnit.test( "Décocher un sous-mot décoche ses mots maîtres", function( assert ) {
+
+       /* On commence par cocher le maître */
+       $('.-g1-m0').children('input').click();
+       /* Puis on décoche un sous-mot */
+       $('.-g1-g1-m3').children('input').click();
+
+       assert.notChecked( '.-g1-m0', "Les mots maîtres sont décochés" );
+       assert.checked( '.-g1-m1', "Les autres sont cochés" );
+       assert.checked( '.-g1-m2', "Les autres sont cochés" );
+       assert.checked( '.-g1-m3', "Les autres sont cochés" );
+       assert.checked( '.-g1-g0-m0', "Les autres sont cochés" );
+       assert.checked( '.-g1-g0-m1', "Les autres sont cochés" );
+       assert.checked( '.-g1-g0-m2', "Les autres sont cochés" );
+       assert.notChecked( '.-g1-g1-m0', "Les mots maîtres sont décochés" );
+       assert.checked( '.-g1-g1-m1', "Les autres sont cochés" );
+       assert.checked( '.-g1-g1-m2', "Les autres sont cochés" );
+     });
+
     </script>
   </body>
 </html>
