@@ -1,112 +1,100 @@
 (function ($) {
+
     // définition du plugin jquery
-    $.fn.saisiesMotsCles = function (options) {
+    $.fn.saisiesMotsClesArbo = function (options) {
 
-        var config, saisie = $(this);
+        var saisie = $(this),
+            config = $.extend(true, {
+                demarrer_plie: true
+            }, options);
 
-        config = $.extend(true, {
-            demarrer_plie: true
-        }, options);
-
-        saisie.find('fieldset').each(function () {
-            var fieldset = $(this),
+        function groupeMot () {
+            var fieldset = $(this) .children('fieldset'),
                 legend   = fieldset.children('legend'),
-                contenu  = fieldset.children('.contenu');
+                contenu  = fieldset.children('.contenu'),
+                plier;
 
+            function toggle () {
+                contenu.toggle({
+                    duration: 200
+                });
+                legend.toggleClass('plie');
+            }
+
+            /* Un clic sur la légende plie/déplie le contenu */
+            legend.click(toggle);
+
+            /* Si on démarre plié, on replie le groupe, mais seulement
+               si aucun mot n'est séléctionné */
             if (config.demarrer_plie) {
-                if (contenu.find('input[checked="checked"]').length === 0) {
+                plier = true;
+                contenu.find('input').each(function () {
+                    if ($(this).attr('checked') === 'checked') {
+                        plier = false;
+                        return false; /* on interrompt la boucle */
+                    }
+                });
+                if (plier) {
                     contenu.hide();
                     legend.addClass('plie');
                 }
             }
 
-            // un clic sur la légende plie ou déplie le fieldset
-            legend.click(function () {
-                contenu.toggle({
-                    duration: 200
-                });
-                legend.toggleClass('plie');
-            });
-        });
+            /* Si un mot du groupe est coché, on déplie dans tous les cas */
+            contenu.find('.choix_mot').change(function () {
+                if (legend.hasClass('plie') &&
+                    ($(this).children('input').attr('checked') === 'checked')) {
 
-        // les mot-clés qui ont le même titre qu'un groupe sont
-        // spéciaux, quand on les active/désactive, on
-        // active/désactive automatiquement les mots-clés du groupe
-        // correspondant.
-        saisie.find('.choix_mot').each(function () {
-            var choix_mot = $(this),
-                titre = choix_mot.find('label').html().trim(),
-                groupe_parent = choix_mot.parents('.choix_groupe_mots').first();
-                groupes_fratrie = groupe_parent.find('.choix_groupe_mots');
-
-            // les mots-clés dont le titre commence par "tous" ou
-            // "toutes" modifient leur groupe en entier…
-            if (titre.match(/^tou(s|tes?)/i)) {
-                choix_mot.change(function (e) {
-                    if (e.target.checked) {
-                        groupe_parent.find('input').not(choix_mot.find('input'))
-                            .attr('checked','checked')
-                            .trigger('change');
-                        groupe_parent.find('.contenu')
-                            .show(200);
-                    } else {
-                        groupe_parent.find('input').not(choix_mot.find('input'))
-                            .attr('checked', false)
-                            .trigger('change');
-                    }
-                });
-            // …alors que les autres décochent une éventuelle case
-            // "tous" quand on les décoche
-            } else {
-                choix_mot.change(function (e) {
-                    if ( ! e.target.checked) {
-                        groupe_parent
-                            .find('> fieldset > .contenu > .choix')
-                            .each(function () {
-                                if ($(this).find('label').html().trim().match(/^tou(s|tes?)/i)) {
-                                    $(this).find('input').first().attr('checked', false);
-                                }
-                            });
-                    }
-                });
-            }
-
-            // On calcule les groupes de mots-clés du même niveau et en dessous
-            groupes_fratrie = $.map(groupes_fratrie, function (el) {
-                return {
-                    'id': el.className.replace(/^.*choix_groupe_([^ ]+).*$/,'$1'),
-                    'titre': $(el).find('legend').html().trim()
-                };
-            });
-
-            $.each(groupes_fratrie, function (i,groupe) {
-
-                if (titre === groupe.titre) {
-
-                    choix_mot.change(function (e) {
-                        if (e.target.checked) {
-                            $('.choix_groupe_' + groupe.id + ' input')
-                                .attr('checked','checked')
-                                .trigger('change');
-                            $('.choix_groupe_' + groupe.id + ' .contenu')
-                                .show(200);
-                        } else {
-                            $('.choix_groupe_' + groupe.id + ' input')
-                                .attr('checked', false)
-                                .trigger('change');
-                        }
-                    });
-
-                    return false;
+                    toggle();
                 }
             });
-        });
+
+            /* On prépare aussi les enfants récursivement */
+            contenu.children('.choix_groupe_mots').map(groupeMot);
+            contenu.children('.choix_mot').map(mot);
+        }
+
+        function mot () {
+            var choix_mot = $(this),
+                titre = choix_mot.children('label').html().trim(),
+                groupe_parent = choix_mot.parents('.choix_groupe_mots').first(),
+                valeur;
+
+            /* s'il faut contrôler tout le groupe avec cette checkbox */
+            if (titre.match(/^tou(s|tes?)/i)) {
+
+                /* On coche tous les sous-mots si la case est cochée */
+                choix_mot.change(function () {
+
+                    valeur = $(this).children('input').attr('checked') ?
+                        'checked' : null;
+
+                    groupe_parent.find('input').each(function () {
+                        /* La non-égalité faible est importante ! */
+                        if ($(this).attr('checked') != valeur) {
+                            $(this).attr('checked', valeur).change();
+                        }
+                    });
+                });
+
+                /* On décoche la case quand un sous-mot est décoché */
+                groupe_parent.find('input').change(function () {
+                    if ( ! $(this).attr('checked')) {
+                        choix_mot.children('input').attr('checked', null);
+                    }
+                });
+
+            }
+        }
+
+        saisie.children('.choix_groupe_mots').map(groupeMot);
+        saisie.children('.choix_mot').map(mot);
 
         return saisie;
     };
 
     // On l'applique aux saisies mots_cles_arborescents
     $(function () {
-        $('.saisie_checkbox_mots_arborescents').saisiesMotsCles();
+        $('.saisie_checkbox_mots_arborescents').saisiesMotsClesArbo();
     });
 })(jQuery);
