@@ -48,12 +48,19 @@
     <script src="#CHEMIN{tests_js/qunit-1.18.0.js}"></script>
     <script>
 
-     QUnit.module("Saisie checkbox_mots_arborescents");
+     QUnit.module("Saisie checkbox_mots_arborescents", {
+       beforeEach: function (assert) {
+         $('.editer_mots_arbo').saisiesMotsClesArbo({
+           demarrer_plie: true,
+           vitesse_animation: 0
+         });
+       }
+     });
 
      /* Si la saisie n'est pas présente, c'est probablement que les
         plugin GMA et/ou objecteur ne sont pas activés */
      QUnit.test( "Plugins GMA et objecteur activés", function( assert ) {
-       assert.equal( $('.editer_mots_arbo').length, 1, "OK !" );
+       assert.equal( $('.editer_mots_arbo').length, 1, "Saisie présente !" );
      });
 
      QUnit.test( "Plier/déplier un groupe", function( assert ) {

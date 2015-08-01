@@ -187,6 +187,7 @@ function formulaires_tester_saisies_mots_saisies_dist () {
                 'nom' => 'mots_arbo',
                 'label' => "Test checkbox_mots_arborescents",
                 'id_groupe' => $ids['groupe_test'],
+                'nojs' => 'oui', /* pas de js, on doit le faire dans les tests */
             ),
         );
 
