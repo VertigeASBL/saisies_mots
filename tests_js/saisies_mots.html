@@ -87,6 +87,14 @@
       assert.notOk( legende_g1.hasClass('plie'), "Un nouveau clic le déplie à nouveau.");
     });
 
+    QUnit.test( "Déplier un groupe lorsqu'on coche un de ses mots", function( assert ) {
+      var legende_g0 = $('.-g0').find('legend').first();
+
+      assert.ok( legende_g0.hasClass('plie'), "Le groupe est d'abord replié" );
+
+      $('.-g0-m0').children('input').click();
+      assert.notOk( legende_g0.hasClass('plie'), "Cocher un sous-mot déplie le groupe.");
+    });
     </script>
   </body>
 </html>
