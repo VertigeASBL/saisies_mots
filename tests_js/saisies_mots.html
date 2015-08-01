@@ -8,29 +8,27 @@
     #INSERT_HEAD
 
     <script>
-        $(function () {
-            /* donner des classes aux saisies pour les retrouver ensuite
-               plus facilement dans les tests */
-            function classer_saisie_groupe (contenu_saisie, prefix='') {
+     $(function () {
+       /* donner des classes aux saisies pour les retrouver ensuite
+          plus facilement dans les tests */
+       function classer_saisie_groupe (contenu_saisie, prefix='') {
 
-                contenu_saisie.children('.choix_groupe_mots').each(function (i, groupe_mot) {
-                    var classe = prefix + '-' + 'g' + parseInt(i, 10);
-                    $(groupe_mot).addClass(classe);
-                    classer_saisie_groupe(
-                        $(groupe_mot)
-                            .children('fieldset')
-                            .children('.contenu'),
-                        classe);
-                });
+         contenu_saisie.children('.choix_groupe_mots').each(function (i, groupe_mot) {
+           var classe = prefix + '-' + 'g' + i;
+           $(groupe_mot).addClass(classe);
+           classer_saisie_groupe(
+             $(groupe_mot).children('fieldset').children('.contenu'),
+             classe);
+         });
 
-                contenu_saisie.children('.choix_mot').each(function (i, mot) {
-                    var classe = prefix + '-' + 'm' + parseInt(i, 10);
-                    $(mot).addClass(classe);
-                });
-            }
+         contenu_saisie.children('.choix_mot').each(function (i, mot) {
+           var classe = prefix + '-' + 'm' + i;
+           $(mot).addClass(classe);
+         });
+       }
 
-            classer_saisie_groupe($('.editer_mots_arbo'));
-        });
+       classer_saisie_groupe($('.editer_mots_arbo'));
+     });
     </script>
 
   </head>
@@ -113,20 +111,20 @@
        assert.notPlie( '.-g0', "Cocher un sous-mot déplie le groupe.");
      });
 
-    QUnit.test( "Cocher les sous-mot et les frères quand on coche un mot maître", function( assert ) {
+     QUnit.test( "Cocher les sous-mot et les frères quand on coche un mot maître", function( assert ) {
 
-      $('.-g1-m0').children('input').click();
-      assert.checked( '.-g1-m1', "Les frères sont cochés" );
-      assert.checked( '.-g1-m2', "Les frères sont cochés" );
-      assert.checked( '.-g1-m3', "Les frères sont cochés" );
-      assert.checked( '.-g1-g0-m0', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g0-m1', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g0-m2', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g1-m0', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g1-m1', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g1-m2', "Les sous-mots sont cochés" );
-      assert.checked( '.-g1-g1-m3', "Les sous-mots sont cochés" );
-    });
+       $('.-g1-m0').children('input').click();
+       assert.checked( '.-g1-m1', "Les frères sont cochés" );
+       assert.checked( '.-g1-m2', "Les frères sont cochés" );
+       assert.checked( '.-g1-m3', "Les frères sont cochés" );
+       assert.checked( '.-g1-g0-m0', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g0-m1', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g0-m2', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g1-m0', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g1-m1', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g1-m2', "Les sous-mots sont cochés" );
+       assert.checked( '.-g1-g1-m3', "Les sous-mots sont cochés" );
+     });
 
     </script>
   </body>
