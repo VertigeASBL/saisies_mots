@@ -56,6 +56,18 @@
        assert.equal( $('.editer_mots_arbo').length, 1, "OK !" );
      });
 
+     QUnit.test( "Plier/déplier un groupe", function( assert ) {
+       var legende_g0 = $('.-g0').find('legend').first();
+
+       assert.ok( legende_g0.hasClass('plie'), "Au début le premier groupe est replié." );
+
+       legende_g0.click();
+       assert.notOk( legende_g0.hasClass('plie'), "Un clic permet de le déplier.");
+
+       legende_g0.click();
+       assert.ok( legende_g0.hasClass('plie'), "Un nouveau clic le replie.");
+     });
+
     </script>
   </body>
 </html>
