@@ -95,6 +95,28 @@
       $('.-g0-m0').children('input').click();
       assert.notOk( legende_g0.hasClass('plie'), "Cocher un sous-mot déplie le groupe.");
     });
+
+    /* Une assertion pour voir si un mot est coché */
+    QUnit.assert.checked = function( mot, message ) {
+      var actual = $(mot).children('input').attr('checked');
+      this.push(actual === 'checked', actual, 'checked', message);
+    };
+
+    QUnit.test( "Cocher les sous-mot et les frères quand on coche un mot maître", function( assert ) {
+
+      $('.-g1-m0').children('input').click();
+      assert.checked( '.-g1-m1', "Les frères sont cochés" );
+      assert.checked( '.-g1-m2', "Les frères sont cochés" );
+      assert.checked( '.-g1-m3', "Les frères sont cochés" );
+      assert.checked( '.-g1-g0-m0', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g0-m1', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g0-m2', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g1-m0', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g1-m1', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g1-m2', "Les sous-mots sont cochés" );
+      assert.checked( '.-g1-g1-m3', "Les sous-mots sont cochés" );
+    });
+
     </script>
   </body>
 </html>
