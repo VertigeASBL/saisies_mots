@@ -142,6 +142,7 @@ function formulaires_tester_saisies_mots_definitions () {
                                 array(
                                     'objet' => 'mot',
                                     'options' => array(
+                                        'nom' => 'dernier_samourai',
                                         'titre' => 'Samoraï 3',
                                     ),
                                 ),
@@ -188,6 +189,9 @@ function formulaires_tester_saisies_mots_saisies_dist () {
                 'id_groupe' => $ids['groupe_test'],
             ),
         );
+
+        include_spip('inc/meta');
+        ecrire_meta('saisie_mots_dernier_samourai', $ids['dernier_samourai']);
     }
 
     return $saisies;
@@ -203,7 +207,11 @@ function formulaires_tester_saisies_mots_saisies_dist () {
  */
 function formulaires_tester_saisies_mots_charger_dist () {
 
-    $valeurs = array();
+    include_spip('inc/config');
+
+    $valeurs = array(
+        'mots_arbo' => array(lire_config('saisie_mots_dernier_samourai')),
+    );
 
     return $valeurs;
 }

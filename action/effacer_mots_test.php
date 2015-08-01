@@ -21,4 +21,7 @@ function action_effacer_mots_test_dist($arg=null) {
     $definitions = charger_fonction('definitions', 'formulaires/tester_saisies_mots');
 
     $objecteur_effacer($definitions());
+
+    include_spip('inc/meta');
+    effacer_meta('saisie_mots_dernier_samourai');
 }
