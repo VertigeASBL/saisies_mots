@@ -5,7 +5,8 @@
 
         var saisie = $(this),
             config = $.extend(true, {
-                demarrer_plie: true
+                demarrer_plie: true,
+                vitesse_animation: 200
             }, options);
 
         function groupeMot () {
@@ -16,7 +17,7 @@
 
             function toggle () {
                 contenu.toggle({
-                    duration: 200
+                    duration: config.vitesse_animation
                 });
                 legend.toggleClass('plie');
             }
