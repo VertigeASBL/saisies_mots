@@ -48,6 +48,29 @@
     <script src="#CHEMIN{tests_js/qunit-1.18.0.js}"></script>
     <script>
 
+     /* Une assertion pour voir si un mot est coché */
+     QUnit.assert.checked = function( mot, message ) {
+       var actual = $(mot).children('input').attr('checked');
+       this.push(actual === 'checked', actual, 'checked', message);
+     };
+
+     QUnit.assert.notChecked = function( mot, message ) {
+       var actual = $(mot).children('input').attr('checked');
+       this.push(actual === undefined, actual, undefined, message);
+     };
+
+     /* Une assertion pour voir si un groupe de mots est plié */
+     QUnit.assert.plie = function( groupe, message ) {
+       var actual = $(groupe).find('legend').first().hasClass('plie');
+       this.push(actual, actual, true, message);
+     };
+
+     QUnit.assert.notPlie = function( groupe, message ) {
+       var actual = $(groupe).find('legend').first().hasClass('plie');
+       this.push( ! actual, actual, false, message);
+     };
+
+
      QUnit.module("Saisie checkbox_mots_arborescents", {
        beforeEach: function (assert) {
          $('.editer_mots_arbo').saisiesMotsClesArbo({
@@ -66,41 +89,29 @@
      QUnit.test( "Plier/déplier un groupe", function( assert ) {
        var legende_g0 = $('.-g0').find('legend').first();
 
-       assert.ok( legende_g0.hasClass('plie'), "Au début le premier groupe est replié." );
-
+       assert.plie('.-g0', "Au début le premier groupe est replié." );
        legende_g0.click();
-       assert.notOk( legende_g0.hasClass('plie'), "Un clic permet de le déplier.");
-
+       assert.notPlie( '.-g0', "Un clic permet de le déplier.");
        legende_g0.click();
-       assert.ok( legende_g0.hasClass('plie'), "Un nouveau clic le replie.");
+       assert.plie( '.-g0', "Un nouveau clic le replie.");
      });
 
-    QUnit.test( "Plier/déplier un groupe pré-coché", function( assert ) {
-      var legende_g1 = $('.-g1').find('legend').first();
+     QUnit.test( "Plier/déplier un groupe pré-coché", function( assert ) {
+       var legende_g1 = $('.-g1').find('legend').first();
 
-      assert.notOk( legende_g1.hasClass('plie'), "Au début le deuxième groupe est déplié, car il est pré-coché." );
+       assert.notPlie( '.-g1', "Au début le deuxième groupe est déplié, car il est pré-coché." );
+       legende_g1.click();
+       assert.plie( '.-g1', "Un clic permet de le replier.");
+       legende_g1.click();
+       assert.notPlie( '.-g1', "Un nouveau clic le déplie à nouveau.");
+     });
 
-      legende_g1.click();
-      assert.ok( legende_g1.hasClass('plie'), "Un clic permet de le replier.");
+     QUnit.test( "Déplier un groupe lorsqu'on coche un de ses mots", function( assert ) {
 
-      legende_g1.click();
-      assert.notOk( legende_g1.hasClass('plie'), "Un nouveau clic le déplie à nouveau.");
-    });
-
-    QUnit.test( "Déplier un groupe lorsqu'on coche un de ses mots", function( assert ) {
-      var legende_g0 = $('.-g0').find('legend').first();
-
-      assert.ok( legende_g0.hasClass('plie'), "Le groupe est d'abord replié" );
-
-      $('.-g0-m0').children('input').click();
-      assert.notOk( legende_g0.hasClass('plie'), "Cocher un sous-mot déplie le groupe.");
-    });
-
-    /* Une assertion pour voir si un mot est coché */
-    QUnit.assert.checked = function( mot, message ) {
-      var actual = $(mot).children('input').attr('checked');
-      this.push(actual === 'checked', actual, 'checked', message);
-    };
+       assert.plie( '.-g0', "Le groupe est d'abord replié" );
+       $('.-g0-m0').children('input').click();
+       assert.notPlie( '.-g0', "Cocher un sous-mot déplie le groupe.");
+     });
 
     QUnit.test( "Cocher les sous-mot et les frères quand on coche un mot maître", function( assert ) {
 
