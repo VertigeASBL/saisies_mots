@@ -63,7 +63,7 @@
 
   [(#GET{type}|=={groupe_mots}|oui)
     <fieldset>
-      <legend>#GET{titre}</legend>
+      <legend>[(#GET{titre}|supprimer_numero)]</legend>
       <div class="contenu">
         [(#INCLURE{fond=saisies/checkbox_mots_arborescents, env, id_groupe=#GET{id_objet}})]
       </div>
