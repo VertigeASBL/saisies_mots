@@ -94,8 +94,4 @@
         return saisie;
     };
 
-    // On l'applique aux saisies mots_cles_arborescents
-    $(function () {
-        $('.saisie_checkbox_mots_arborescents').saisiesMotsClesArbo();
-    });
 })(jQuery);

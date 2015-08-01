@@ -83,4 +83,17 @@
     </p>]
 </div>
 ]
+
+[(#ENV{nojs}|non)
+ <script>
+    // On l'applique aux saisies mots_cles_arborescents
+    $(function () {
+        $('.editer_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]').saisiesMotsClesArbo({
+            'demarrer_plie': [(#ENV{demarrer_plie}|=={non}|?{false,true})],
+            'vitesse_animation': 0
+        });
+    });
+ </script>
+]
+
 </B_checkbox>
