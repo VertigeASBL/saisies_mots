@@ -75,6 +75,18 @@
        assert.ok( legende_g0.hasClass('plie'), "Un nouveau clic le replie.");
      });
 
+    QUnit.test( "Plier/déplier un groupe pré-coché", function( assert ) {
+      var legende_g1 = $('.-g1').find('legend').first();
+
+      assert.notOk( legende_g1.hasClass('plie'), "Au début le deuxième groupe est déplié, car il est pré-coché." );
+
+      legende_g1.click();
+      assert.ok( legende_g1.hasClass('plie'), "Un clic permet de le replier.");
+
+      legende_g1.click();
+      assert.notOk( legende_g1.hasClass('plie'), "Un nouveau clic le déplie à nouveau.");
+    });
+
     </script>
   </body>
 </html>
