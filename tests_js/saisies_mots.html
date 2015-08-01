@@ -7,6 +7,32 @@
     <link rel="stylesheet" href="#CHEMIN{tests_js/qunit-1.18.0.css}">
     #INSERT_HEAD
 
+    <script>
+        $(function () {
+            /* donner des classes aux saisies pour les retrouver ensuite
+               plus facilement dans les tests */
+            function classer_saisie_groupe (contenu_saisie, prefix='') {
+
+                contenu_saisie.children('.choix_groupe_mots').each(function (i, groupe_mot) {
+                    var classe = prefix + '-' + 'g' + parseInt(i, 10);
+                    $(groupe_mot).addClass(classe);
+                    classer_saisie_groupe(
+                        $(groupe_mot)
+                            .children('fieldset')
+                            .children('.contenu'),
+                        classe);
+                });
+
+                contenu_saisie.children('.choix_mot').each(function (i, mot) {
+                    var classe = prefix + '-' + 'm' + parseInt(i, 10);
+                    $(mot).addClass(classe);
+                });
+            }
+
+            classer_saisie_groupe($('.editer_mots_arbo'));
+        });
+    </script>
+
   </head>
   <body>
     <div id="qunit"></div>
