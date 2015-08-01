@@ -1,0 +1,36 @@
+[(#AUTORISER{webmestre}|oui)
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tests Saisies de Mots-Clés</title>
+    <link rel="stylesheet" href="#CHEMIN{tests_js/qunit-1.18.0.css}">
+    #INSERT_HEAD
+
+  </head>
+  <body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+      #FORMULAIRE_TESTER_SAISIES_MOTS
+    </div>
+
+    [(#REM) On met un argument qui ne sert à rien dans l'action pour
+            éviter un warning (SPIP 3.0.20) ]
+    #BOUTON_ACTION{effacer groupe de mots-clés de test,
+                   #URL_ACTION_AUTEUR{effacer_mots_test, non}}
+
+    <script src="#CHEMIN{tests_js/qunit-1.18.0.js}"></script>
+    <script>
+
+     QUnit.module("Saisie checkbox_mots_arborescents");
+
+     /* Si la saisie n'est pas présente, c'est probablement que les
+        plugin GMA et/ou objecteur ne sont pas activés */
+     QUnit.test( "Plugins GMA et objecteur activés", function( assert ) {
+       assert.equal( $('.editer_mots_arbo').length, 1, "OK !" );
+     });
+
+    </script>
+  </body>
+</html>
+]

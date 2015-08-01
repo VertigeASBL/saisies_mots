@@ -19,6 +19,7 @@
 
   <necessite nom="saisies" />
   <utilise nom="gma" />
+  <utilise nom="objecteur" /><!-- nécessaire pour les tests -->
 
   <pipeline nom="header_prive" inclure="saisies_mots_pipelines.php" />
   <pipeline nom="jquery_plugins" inclure="saisies_mots_pipelines.php" />
