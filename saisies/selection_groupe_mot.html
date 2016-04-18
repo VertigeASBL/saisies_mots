@@ -1,0 +1,16 @@
+[(#REM)
+
+  Une saisie pour sélectionner un groupe de mots-clés
+
+  Cette saisie admet les mêmes paramètres que la saisie selection, à part le
+  paramètre datas.
+]
+
+#SET{groupes_mots, #ARRAY}
+<BOUCLE_groupes_mots(GROUPES_MOTS) {par num titre, titre}>
+  [(#SET{groupes_mots, #GET{groupes_mots}|array_merge{#ARRAY{#TITRE, #ID_GROUPE}}})]
+</BOUCLE_groupes_mots>
+
+[(#SET{groupes_mots, #GET{groupes_mots}|array_flip})]
+
+[(#INCLURE{fond=saisies/selection, env, datas=#GET{groupes_mots}})]
