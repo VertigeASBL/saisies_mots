@@ -1,0 +1,24 @@
+[(#REM)
+
+  Une saisie pour sélectionner un mot-clé parmi ceux existants.
+
+  Cette saisie admet les mêmes paramètres que la saisie
+  selection_multiple, avec un paramètre supplémentaire : "id_groupe"
+  qui permet de restreindre les choix proposés aux mot-clés d'un
+  groupe. Le paramètre "datas" sera ignoré, il n'y a qu'à utiliser la
+  saisie selection_multiple si on veut choisir les datas…
+
+]
+
+#SET{mots-cles, #ARRAY}
+<BOUCLE_mots(MOTS) {si #ENV{id_groupe}|is_array|non}{id_groupe?}{par num titre, titre}>
+  [(#SET{mots-cles, #GET{mots-cles}|array_merge{#ARRAY{#TITRE, #ID_MOT}}})]
+</BOUCLE_mots>
+
+<BOUCLE_mots_groupes(MOTS) {si #ENV{id_groupe}|is_array}{id_groupe IN #ENV{id_groupe}}{par num titre, titre}>
+  [(#SET{mots-cles, #GET{mots-cles}|array_merge{#ARRAY{#TITRE, #ID_MOT}}})]
+</BOUCLE_mots_groupes>
+
+[(#SET{mots-cles, #GET{mots-cles}|array_flip})]
+
+[(#INCLURE{fond=saisies/selection, env, datas=#GET{mots-cles}})]
