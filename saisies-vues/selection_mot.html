@@ -1,0 +1,7 @@
+#SET{mots-cles, #ARRAY}
+<BOUCLE_mots(MOTS) {id_groupe?}>
+  [(#SET{mots-cles, #GET{mots-cles}|array_merge{#ARRAY{#TITRE, #ID_MOT}}})]
+</BOUCLE_mots>
+
+[(#SET{mots-cles, #GET{mots-cles}|array_flip})]
+[(#INCLURE{fond=saisies-vues/selection, env, datas=#GET{mots-cles}})]
