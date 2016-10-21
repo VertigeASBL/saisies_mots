@@ -51,7 +51,7 @@ function trouver_mots($objet, $id_objet, $id_groupe = '*', $chercher_enfants = f
  * @param String $objet :     le type d'objet éditorial
  * @param String $id_objet :  l'id de l'objet éditorial
  * @param array $mots :       une liste d'identifiant de mots-clés à
- *                            associer à l'objet
+ *                            associer à l'objet. Peut aussi être un identifiant.
  * @param int    $id_groupe : un éventuel id_groupe auquel se restreindre.
  * @param bool $chercher_enfants : Si TRUE, inclure les éventuels sous-groupes
  *                            de mots-clés (ça n'a de sens que si l'on
@@ -63,8 +63,12 @@ function lier_mots($objet, $id_objet, $mots, $id_groupe = '*', $chercher_enfants
 
 	include_spip('action/editer_liens');
 
-	if (! $mots) { $mots = array();
+	if (! $mots) {
+		$mots = array();
+	} elseif (! is_array($mots)) {
+		$mots = array($mots);
 	}
+
 	// On vire d'éventuels identifiants non valides
 	$mots = array_filter($mots, function ($el) {
 		return (intval($el) > 0);
