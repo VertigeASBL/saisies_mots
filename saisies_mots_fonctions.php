@@ -9,8 +9,6 @@
  * @package    SPIP\Saisies_mots\Fonctions
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) return;
-
 /**
  * Trouve les mots-clés associés à un objet
  *
@@ -24,20 +22,22 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  *
  * @return array : Une liste des id_mot des mots-clés liés à l'objet
  */
-function trouver_mots ($objet, $id_objet, $id_groupe='*', $chercher_enfants=FALSE) {
+function trouver_mots($objet, $id_objet, $id_groupe = '*', $chercher_enfants = false) {
 
-    include_spip('action/editer_liens');
+	include_spip('action/editer_liens');
 
-    $mots_lies = objet_trouver_liens(array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
-                                     array($objet => $id_objet));
+	$mots_lies = objet_trouver_liens(
+		array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
+		array($objet => $id_objet)
+	);
 
-    if ($mots_lies) {
-        return array_map(function ($el) {
-            return $el['id_mot'];
-        }, $mots_lies);
-    } else {
-        return array();
-    }
+	if ($mots_lies) {
+		return array_map(function ($el) {
+			return $el['id_mot'];
+		}, $mots_lies);
+	} else {
+		return array();
+	}
 }
 
 /**
@@ -59,20 +59,23 @@ function trouver_mots ($objet, $id_objet, $id_groupe='*', $chercher_enfants=FALS
  *
  * @return String  Un message d'erreur si une erreur a eu lieu, rien sinon.
  */
-function lier_mots ($objet, $id_objet, $mots, $id_groupe='*', $chercher_enfants=FALSE) {
+function lier_mots($objet, $id_objet, $mots, $id_groupe = '*', $chercher_enfants = false) {
 
-    include_spip('action/editer_liens');
+	include_spip('action/editer_liens');
 
-    if ( ! $mots) { $mots = array(); }
-    // On vire d'éventuels identifiants non valides
-    $mots = array_filter($mots, function ($el) {
-        return (intval($el) > 0);
-    });
+	if (! $mots) { $mots = array();
+	}
+	// On vire d'éventuels identifiants non valides
+	$mots = array_filter($mots, function ($el) {
+		return (intval($el) > 0);
+	});
 
-    objet_dissocier(array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
-                    array($objet => $id_objet));
+	objet_dissocier(
+		array('mot' => mots_groupe($id_groupe, $chercher_enfants)),
+		array($objet => $id_objet)
+	);
 
-    objet_associer(array('mot' => $mots), array($objet => $id_objet));
+	objet_associer(array('mot' => $mots), array($objet => $id_objet));
 }
 
 /**
@@ -85,29 +88,35 @@ function lier_mots ($objet, $id_objet, $mots, $id_groupe='*', $chercher_enfants=
  *
  * @return array : Une liste des identifiants des mots-clés du groupe
  */
-function mots_groupe ($id_groupe='*', $chercher_enfants=FALSE) {
+function mots_groupe($id_groupe = '*', $chercher_enfants = false) {
 
-    if ($id_groupe === '*') {
-        $mots_groupe = sql_allfetsel('id_mot', 'spip_mots');
-    } else {
-        $mots_groupe = sql_allfetsel('id_mot', 'spip_mots',
-                                     'id_groupe='.intval($id_groupe));
-    }
+	if ($id_groupe === '*') {
+		$mots_groupe = sql_allfetsel('id_mot', 'spip_mots');
+	} else {
+		$mots_groupe = sql_allfetsel(
+			'id_mot',
+			'spip_mots',
+			'id_groupe='.intval($id_groupe)
+		);
+	}
 
-    $mots_groupe = array_map(function ($el) {
-        return $el['id_mot'];
-    }, $mots_groupe);
+	$mots_groupe = array_map(function ($el) {
+		return $el['id_mot'];
+	}, $mots_groupe);
 
-    if ($chercher_enfants) {
-        $sous_groupes = sql_allfetsel('id_groupe', 'spip_groupes_mots',
-                                      'id_parent=' . intval($id_groupe));
+	if ($chercher_enfants) {
+		$sous_groupes = sql_allfetsel(
+			'id_groupe',
+			'spip_groupes_mots',
+			'id_parent=' . intval($id_groupe)
+		);
 
-        foreach ($sous_groupes as $sous_groupe) {
-            $mots_groupe = array_merge($mots_groupe, mots_groupe($sous_groupe['id_groupe'], TRUE));
-        }
-    }
+		foreach ($sous_groupes as $sous_groupe) {
+			$mots_groupe = array_merge($mots_groupe, mots_groupe($sous_groupe['id_groupe'], true));
+		}
+	}
 
-    return $mots_groupe;
+	return $mots_groupe;
 }
 
 /**
@@ -117,20 +126,20 @@ function mots_groupe ($id_groupe='*', $chercher_enfants=FALSE) {
  * à ce qui se passe en faisant {id_mot IN #GET{mes_id_mots}}, passer
  * un tableau vide ne filtre rien.
  */
-function critere_mots_in_ou_tout ($idb, &$boucles, $crit) {
+function critere_mots_in_ou_tout($idb, &$boucles, $crit) {
 
-    $boucle = $boucles[$idb];
-    $id_mots = calculer_liste(array($crit->param[0][0]), array(), $boucles, $boucle->id_parent);
+	$boucle = $boucles[$idb];
+	$id_mots = calculer_liste(array($crit->param[0][0]), array(), $boucles, $boucle->id_parent);
 
-    $trouver_table = charger_fonction('trouver_table', 'base');
+	$trouver_table = charger_fonction('trouver_table', 'base');
 
-    $depart = array($boucle->id_table,
-                    $trouver_table($boucle->id_table, $boucle->sql_serveur));
+	$depart = array($boucle->id_table,
+					$trouver_table($boucle->id_table, $boucle->sql_serveur));
 
-    $arrivee = array('mots',
-                     $trouver_table('mots', $boucle->sql_serveur));
+	$arrivee = array('mots',
+					 $trouver_table('mots', $boucle->sql_serveur));
 
-    $alias_jointure = calculer_jointure($boucle, $depart, $arrivee);
+	$alias_jointure = calculer_jointure($boucle, $depart, $arrivee);
 
-    $boucle->where[] = "((count($id_mots) > 0) ? sql_in('$alias_jointure.id_mot', $id_mots) : '')";
+	$boucle->where[] = "((count($id_mots) > 0) ? sql_in('$alias_jointure.id_mot', $id_mots) : '')";
 }

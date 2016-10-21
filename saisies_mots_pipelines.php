@@ -9,8 +9,6 @@
  * @package    SPIP\Saisies_mots\Pipelines
  */
 
-if (!defined('_ECRIRE_INC_VERSION')) return;
-
 /**
  * Insérer du css pour les saisies mots-clés
  *
@@ -18,12 +16,12 @@ if (!defined('_ECRIRE_INC_VERSION')) return;
  * @param  array $flux Données du pipeline
  * @return array       Données du pipeline
  */
-function saisies_mots_header_prive ($flux) {
+function saisies_mots_header_prive($flux) {
 
-    $flux .= '<link rel="stylesheet" type="text/css" media="all" href="' .
-        find_in_path('saisies_mots.css') . '" />';
+	$flux .= '<link rel="stylesheet" type="text/css" media="all" href="' .
+		find_in_path('saisies_mots.css') . '" />';
 
-    return $flux;
+	return $flux;
 }
 
 /**
@@ -33,9 +31,9 @@ function saisies_mots_header_prive ($flux) {
  * @param  array $scripts Données du pipeline
  * @return array       Données du pipeline
  */
-function saisies_mots_jquery_plugins ($scripts) {
+function saisies_mots_jquery_plugins($scripts) {
 
-    $scripts[] = 'javascript/jquery.saisiesMotsCles.js';
+	$scripts[] = 'javascript/jquery.saisiesMotsCles.js';
 
-    return $scripts;
+	return $scripts;
 }

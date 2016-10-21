@@ -8,5 +8,3 @@
  * @licence    GNU/GPL
  * @package    SPIP\Saisies_mots\Options
  */
-
-if (!defined('_ECRIRE_INC_VERSION')) return;
