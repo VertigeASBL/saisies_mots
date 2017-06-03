@@ -1,0 +1,116 @@
+[(#REM)
+
+  Une saisie pour sélectionner un ou plusieurs mots-clés parmi ceux existants.
+
+  Contrairement à la saisie checkbox_mots_arborescents qui se base sur le plugin
+  « Groupes de mots-clés arborescents », cette saisie est conçue pour être
+  utilisée avec le plugin « Mots arborescents ».
+
+  Cette saisie admet les mêmes paramètres que la saisie checkbox, avec un
+  paramètre supplémentaire : "id_groupe" qui permet de restreindre les choix
+  proposés aux mot-clés d'un groupe. Le paramètre "datas" sera ignoré, il n'y a
+  qu'à utiliser la saisie checkbox si on veut choisir les datas…
+
+]
+
+[(#REM) datas peut être une chaine qu'on sait décomposer ]
+#SET{datas, #ENV*{datas}|saisies_chaine2tableau}
+
+[(#REM) defaut peut être une chaine (plusieurs valeurs ou pas) qu'on sait décomposer ]
+#SET{defaut, #ENV{defaut}|saisies_chaine2tableau}
+
+[(#REM) valeur doit être un tableau ! ]
+#SET{valeur, #ENV{valeur}|saisies_valeur2tableau}
+
+[(#REM) lorsque qu'on donne un 'disabled' qui est une chaine,
+  il faut la transformer en tableau. Ce tableau est vide si la chaine valait ''
+  sinon une clé 0 serait considérée disabled à tord
+]
+#SET{disabled,#ENV{disable}}
+[(#GET{disabled}|is_string|oui)
+  [(#GET{disabled}|strlen|non) #SET{disabled,#ARRAY} ]
+  [(#GET{disabled}|oui) #SET{disabled,#ARRAY|push{#GET{disabled}}} ]
+]
+
+[(#ENV{tout_selectionner}|oui)
+  <div class="[(#ENV{choix,choix})][ (#ENV{choix,choix})_tout_selectionner ]none-nojs">
+    <input type="checkbox" name="#ENV{nom}_tout" class="checkbox" id="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_tout" value="on" onChange="if (jQuery(this).prop('checked')==true) jQuery(this).parent('div').parent().find('input').prop('checked',true); else jQuery(this).parent('div').parent().find('input').prop('checked',false);"/>
+    <label for="champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_tout"><:saisies:tout_selectionner:></label>
+  </div>
+]
+
+[(#REM) pour pouvoir récupérer le js de la saisie checkbox_mots_arborescents, on
+        essaie de coller à la même nomenclature. Même si c'est un peu absurde,
+        on nomme groupe les mots qui sont parents d'autres mots. ]
+<B_checkbox>
+
+  [(#ENV{id_parent}|oui)
+  <div class="choix choix_mot choix_#ID_PARENT">
+      [(#SET{id, champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#ID_PARENT}|md5)]})]
+      <input type="checkbox" name="#ENV{nom}\[\]" class="checkbox" id="#GET{id}"
+             [(#ID_PARENT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"]
+             value="#ID_PARENT"[(#ID_PARENT|in_array{#GET{disabled}}|oui) disabled="disabled"]
+             [ (#ENV*{attributs})] />
+      <label for="#GET{id}"[(#ID_PARENT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui) class="on"]>
+        #INFO_TITRE{mot, #ID_PARENT}
+      </label>
+
+  </div>
+  ]
+
+<BOUCLE_checkbox(MOTS){id_groupe=#ENV{id_groupe}}{id_parent=#ID_PARENT|sinon{0}}>
+
+  [(#SET{nom, #ID_MOT|est_parent|?{groupe_#ID_MOT, #ID_MOT}})]
+
+  [(#ID_MOT|est_parent|non)
+    <div class="choix choix_[(#ID_MOT|est_parent|?{groupe_mots, mot})][ (#ENV{choix,choix})_#GET{nom}]">
+      [(#SET{id, champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#GET{nom}}|md5)]})]
+      <input type="checkbox" name="#ENV{nom}\[\]" class="checkbox" id="#GET{id}"
+             [(#GET{nom}|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"]
+             value="#GET{nom}"[(#GET{nom}|in_array{#GET{disabled}}|oui) disabled="disabled"]
+             [ (#ENV*{attributs})] />
+      <label for="#GET{id}"[(#GET{nom}|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)class="on"]>
+        #TITRE
+      </label>
+    </div>
+  ]
+
+  [(#ID_MOT|est_parent|oui)
+    <div class="choix choix_groupe_mots choix_groupe_#ID_MOT">
+    <fieldset>
+      <legend>#TITRE</legend>
+      <div class="contenu">
+        [(#REM) Appel récursif, on fait bien attention à ne pas inclure le js plusieurs fois. ]
+        [(#INCLURE{fond=saisies/checkbox_mots_arborescents_motsar, env, id_parent=#ID_MOT, nojs=oui})]
+      </div>
+    </fieldset>
+    </div>
+  ]
+
+</BOUCLE_checkbox>
+
+  [(#ENV{choix_alternatif}|oui)
+    <div class="#ENV{choix,choix} choix_alternatif[ (#ENV{choix,choix})_alternatif]">
+      <input name="#ENV{nom}\[choix_alternatif\]" id="[champ_(#ENV{id,#ENV{nom}}|saisie_nom2classe)_choix_alternatif]" />
+      <label for="[champ_(#ENV{id,#ENV{nom}}|saisie_nom2classe)_choix_alternatif]">
+        [(#ENV{choix_alternatif_label, <:saisies:option_choix_alternatif_label_defaut:>})]
+      </label>
+      [<p class="explication">
+        (#ENV{choix_alternatif_explication})
+      </p>]
+    </div>
+  ]
+
+  [(#ENV{nojs}|non)
+    <script>
+     // On l'applique aux saisies mots_cles_arborescents
+     $(function () {
+       $('.editer_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]').saisiesMotsClesArbo({
+         'demarrer_plie': [(#ENV{demarrer_plie}|=={non}|?{false,true})],
+         'vitesse_animation': 0
+       });
+     });
+    </script>
+  ]
+
+</B_checkbox>
