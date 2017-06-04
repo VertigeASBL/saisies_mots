@@ -39,24 +39,9 @@
   </div>
 ]
 
-[(#REM) pour pouvoir récupérer le js de la saisie checkbox_mots_arborescents, on
-        essaie de coller à la même nomenclature. Même si c'est un peu absurde,
-        on nomme groupe les mots qui sont parents d'autres mots. ]
 <B_checkbox>
 
-  [(#ENV{id_parent}|oui)
-  <div class="choix choix_mot choix_#ID_PARENT">
-      [(#SET{id, champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#ID_PARENT}|md5)]})]
-      <input type="checkbox" name="#ENV{nom}\[\]" class="checkbox" id="#GET{id}"
-             [(#ID_PARENT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"]
-             value="#ID_PARENT"[(#ID_PARENT|in_array{#GET{disabled}}|oui) disabled="disabled"]
-             [ (#ENV*{attributs})] />
-      <label for="#GET{id}"[(#ID_PARENT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui) class="on"]>
-        #INFO_TITRE{mot, #ID_PARENT}
-      </label>
-
-  </div>
-  ]
+  [(#ENV{recusion}|non) <div class="conteneur">]
 
 <BOUCLE_checkbox(MOTS){id_groupe=#ENV{id_groupe}}{id_parent=#ID_PARENT|sinon{0}}>
 
@@ -77,13 +62,25 @@
 
   [(#ID_MOT|est_parent|oui)
     <div class="choix choix_groupe_mots choix_groupe_#ID_MOT">
-    <fieldset>
-      <legend>#TITRE</legend>
-      <div class="contenu">
-        [(#REM) Appel récursif, on fait bien attention à ne pas inclure le js plusieurs fois. ]
-        [(#INCLURE{fond=saisies/checkbox_mots_arborescents_motsar, env, id_parent=#ID_MOT, nojs=oui})]
+
+      <div class="choix choix_mot choix_parent choix_#ID_MOT">
+        [(#SET{id, champ_[(#ENV{id,#ENV{nom}}|saisie_nom2classe)]_[(#COMPTEUR_BOUCLE|concat{'-',#ID_MOT}|md5)]})]
+        <input type="checkbox" name="#ENV{nom}\[\]" class="checkbox" id="#GET{id}"
+               [(#ID_MOT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui)checked="checked"]
+               value="#ID_MOT"[(#ID_MOT|in_array{#GET{disabled}}|oui) disabled="disabled"]
+               [ (#ENV*{attributs})] />
+        <label for="#GET{id}"[(#ID_MOT|in_array{#ENV{valeur_forcee,#GET{valeur,#GET{defaut}}}}|oui) class="on"]>
+          #INFO_TITRE{mot, #ID_MOT}
+        </label>
       </div>
-    </fieldset>
+
+      <fieldset>
+        <legend>#TITRE</legend>
+        <div class="contenu">
+          [(#REM) Appel récursif, on fait bien attention à ne pas inclure le js plusieurs fois. ]
+          [(#INCLURE{fond=saisies/checkbox_mots_arborescents_motsar, env, id_parent=#ID_MOT, nojs=oui, recusion=oui})]
+        </div>
+      </fieldset>
     </div>
   ]
 
@@ -100,6 +97,8 @@
       </p>]
     </div>
   ]
+
+  [(#ENV{recusion}|non) </div>]
 
   [(#REM) Le js ne fonctionne pas, mais on s'en tape dans notre cas, alors ça
     sera pour une autre fois…

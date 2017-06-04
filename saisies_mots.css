@@ -1,4 +1,26 @@
 .saisie_checkbox_mots_arborescents fieldset {
   margin-left: 10px; }
 
+.saisie_checkbox_mots_arborescents_motsar.editer .conteneur {
+  border: 1px solid #ddd;
+  padding-bottom: 3px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: white; }
+.saisie_checkbox_mots_arborescents_motsar.editer .choix {
+  border: none;
+  padding: 0px 1px 0 10px; }
+  .saisie_checkbox_mots_arborescents_motsar.editer .choix.choix_groupe_mots {
+    padding: 8px 0 1px 0; }
+  .saisie_checkbox_mots_arborescents_motsar.editer .choix label {
+    position: relative;
+    top: -3px; }
+.saisie_checkbox_mots_arborescents_motsar.editer fieldset {
+  border: none; }
+  .saisie_checkbox_mots_arborescents_motsar.editer fieldset legend {
+    position: absolute;
+    left: -99999px; }
+.saisie_checkbox_mots_arborescents_motsar.editer .contenu {
+  margin-left: 10px; }
+
 /*# sourceMappingURL=saisies_mots.css.map */

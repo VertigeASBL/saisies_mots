@@ -3,3 +3,41 @@
     margin-left: 10px;
   }
 }
+
+.saisie_checkbox_mots_arborescents_motsar.editer {
+
+    .conteneur {
+        border: 1px solid #ddd;
+        padding-bottom: 3px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: white;
+    }
+
+    .choix {
+        border: none;
+        padding: 0px 1px 0 10px;
+
+        &.choix_groupe_mots {
+            padding: 8px 0 1px 0;
+        }
+
+        label {
+            position: relative;
+                top: -3px;
+        }
+    }
+
+    fieldset {
+        border: none;
+
+        legend {
+            position: absolute;
+            left: -99999px;
+        }
+    }
+
+    .contenu {
+        margin-left: 10px;
+    }
+}
