@@ -43,7 +43,7 @@
 
   [(#ENV{recusion}|non) <div class="conteneur">]
 
-<BOUCLE_checkbox(MOTS){id_groupe=#ENV{id_groupe}}{id_parent=#ID_PARENT|sinon{0}}>
+<BOUCLE_checkbox(MOTS){id_groupe=#ENV{id_groupe}}{id_parent=#ID_PARENT|sinon{0}}{par titre}>
 
   [(#SET{nom, #ID_MOT|est_parent|?{groupe_#ID_MOT, #ID_MOT}})]
 
